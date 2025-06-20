@@ -1,9 +1,13 @@
+tailwind.config = {
+    darkMode: 'class'
+}
+
+document.documentElement.classList.toggle('dark');
+
 document.addEventListener('DOMContentLoaded', async function() {
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
-    console.log("hi")
 
     if (window.Splitting) {
         Splitting();
