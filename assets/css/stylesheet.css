@@ -1,0 +1,12 @@
+.text-rainbow .char {
+  animation: rainbow-colors 2s linear infinite;
+  animation-delay: calc(-2s * var(--char-percent));
+}
+
+@keyframes rainbow-colors {
+  0% { color: hsl(0turn, 90%, 65%); }
+  25% { color: hsl(.25turn, 90%, 65%); }
+  50% { color: hsl(.5turn, 90%, 65%); }
+  75% { color: hsl(.75turn, 90%, 65%); }
+  100% { color: hsl(1turn, 90%, 65%); }
+}

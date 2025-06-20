@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="../images/favicons/favicon.ico" type="image/x-icon"/> <!-- pretend i have a favicon.ico, im too lazy to make one yet -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/openVLE.png"/>
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/images/openVLE.png"/>
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/images/openVLE.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/openVLE.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/openVLE.png"/>
+  <title>OpenVLE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/stylesheet.css">
+  <script src="../assets/scripts/tailwindConfig.js"></script>
+  <script src="../assets/scripts/vleHelper.js"></script>
+  <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+  <script src="../assets/scripts/splitting.js"></script>
+  <script>document.documentElement.classList.toggle('dark')</script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+<div class="flex min-h-screen">
+    <aside class="w-20 bg-white dark:bg-gray-800 shadow-md flex flex-col items-center py-6">
+        <img id="openVLEAvatar" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-600 shadow"/>
+
+        <hr class="w-12 border-t-2 border-gray-300 dark:border-gray-600 my-6"/>
+
+        <nav class="flex flex-col gap-6 items-center w-full">
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Home">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor">
+                    <path d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Subjects">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-blue-500 dark:text-blue-400" fill="currentColor">
+                    <path d="M0 32C0 14.3 14.3 0 32 0L96 0c17.7 0 32 14.3 32 32l0 64L0 96 0 32zm0 96l128 0 0 256L0 384 0 128zM0 416l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zM160 32c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 64L160 96l0-64zm0 96l128 0 0 256-128 0 0-256zm0 288l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zm203.6-19.9L320 232.6l0-89.9 100.4-26.9 66 247.4L363.6 396.1zM412.2 85L320 109.6 320 11l36.9-9.9c16.9-4.6 34.4 5.5 38.9 22.6L412.2 85zM371.8 427l122.8-32.9 16.3 61.1c4.5 17-5.5 34.5-22.5 39.1l-61.4 16.5c-16.9 4.6-34.4-5.5-38.9-22.6L371.8 427z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Homework">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-orange-500 dark:text-orange-400" fill="currentColor">
+                    <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Calendar">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6 text-yellow-600 dark:text-yellow-500" fill="currentColor">
+                    <path d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 48 0c26.5 0 48 21.5 48 48l0 48L0 160l0-48C0 85.5 21.5 64 48 64l48 0 0-32c0-17.7 14.3-32 32-32zM0 192l448 0 0 272c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 192zm64 80l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm128 0l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zM64 400l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zm112 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="News">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-purple-500" fill="currentColor">
+                    <path d="M96 96c0-35.3 28.7-64 64-64l288 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L80 480c-44.2 0-80-35.8-80-80L0 128c0-17.7 14.3-32 32-32s32 14.3 32 32l0 272c0 8.8 7.2 16 16 16s16-7.2 16-16L96 96zm64 24l0 80c0 13.3 10.7 24 24 24l112 0c13.3 0 24-10.7 24-24l0-80c0-13.3-10.7-24-24-24L184 96c-13.3 0-24 10.7-24 24zm208-8c0 8.8 7.2 16 16 16l48 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-48 0c-8.8 0-16 7.2-16 16zm0 96c0 8.8 7.2 16 16 16l48 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-48 0c-8.8 0-16 7.2-16 16zM160 304c0 8.8 7.2 16 16 16l256 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-256 0c-8.8 0-16 7.2-16 16zm0 96c0 8.8 7.2 16 16 16l256 0c8.8 0 16-7.2 16-16s-7.2-16-16-16l-256 0c-8.8 0-16 7.2-16 16z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Attendance">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="w-6 h-6 text-green-500 dark:text-green-500" fill="currentColor">
+                    <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM625 177L497 305c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L591 143c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Reports">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor">
+                    <path d="M64 32C64 14.3 49.7 0 32 0S0 14.3 0 32L0 64 0 368 0 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-128 64.3-16.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30l0-247.7c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L64 48l0-16z"/>
+                </svg>
+            </button>
+            <button class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 text-2xl transition bg-gray-200 dark:bg-gray-700" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="currentColor">
+                    <path d="M305.4 21.8c-1.3-10.4-9.1-18.8-19.5-20C276.1 .6 266.1 0 256 0c-11.1 0-22.1 .7-32.8 2.1c-10.3 1.3-18 9.7-19.3 20l-2.9 23.1c-.8 6.4-5.4 11.6-11.5 13.7c-9.6 3.2-19 7.2-27.9 11.7c-5.8 3-12.8 2.5-18-1.5l-18-14c-8.2-6.4-19.7-6.8-27.9-.4c-16.6 13-31.5 28-44.4 44.7c-6.3 8.2-5.9 19.6 .5 27.8l14.2 18.3c4 5.1 4.4 12 1.5 17.8c-4.4 8.8-8.2 17.9-11.3 27.4c-2 6.2-7.3 10.8-13.7 11.6l-22.8 2.9c-10.3 1.3-18.7 9.1-20 19.4C.7 234.8 0 245.3 0 256c0 10.6 .6 21.1 1.9 31.4c1.3 10.3 9.7 18.1 20 19.4l22.8 2.9c6.4 .8 11.7 5.4 13.7 11.6c3.1 9.5 6.9 18.7 11.3 27.5c2.9 5.8 2.4 12.7-1.5 17.8L54 384.8c-6.4 8.2-6.8 19.6-.5 27.8c12.9 16.7 27.8 31.7 44.4 44.7c8.2 6.4 19.7 6 27.9-.4l18-14c5.1-4 12.2-4.4 18-1.5c9 4.6 18.3 8.5 27.9 11.7c6.1 2.1 10.7 7.3 11.5 13.7l2.9 23.1c1.3 10.3 9 18.7 19.3 20c10.7 1.4 21.7 2.1 32.8 2.1c10.1 0 20.1-.6 29.9-1.7c10.4-1.2 18.2-9.7 19.5-20l2.8-22.5c.8-6.5 5.5-11.8 11.7-13.8c10-3.2 19.7-7.2 29-11.8c5.8-2.9 12.7-2.4 17.8 1.5L385 457.9c8.2 6.4 19.6 6.8 27.8 .5c2.8-2.2 5.5-4.4 8.2-6.7L451.7 421c1.8-2.2 3.6-4.4 5.4-6.6c6.5-8.2 6-19.7-.4-27.9l-14-17.9c-4-5.1-4.4-12.2-1.5-18c4.8-9.4 9-19.3 12.3-29.5c2-6.2 7.3-10.8 13.7-11.6l22.8-2.8c10.3-1.3 18.8-9.1 20-19.4c.2-1.7 .4-3.5 .6-5.2l0-51.9c-.2-1.7-.4-3.5-.6-5.2c-1.3-10.3-9.7-18.1-20-19.4l-22.8-2.8c-6.4-.8-11.7-5.4-13.7-11.6c-3.4-10.2-7.5-20.1-12.3-29.5c-3-5.8-2.5-12.8 1.5-18l14-17.9c6.4-8.2 6.8-19.7 .4-27.9c-1.8-2.2-3.6-4.4-5.4-6.6L421 60.3c-2.7-2.3-5.4-4.5-8.2-6.7c-8.2-6.4-19.6-5.9-27.8 .5L366.7 68.3c-5.1 4-12.1 4.4-17.8 1.5c-9.3-4.6-19-8.6-29-11.8c-6.2-2-10.9-7.3-11.7-13.7l-2.8-22.5zM256 176a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"/>
+                </svg>
+            </button>
+        </nav>
+
+        <div class="mt-auto pt-8 flex flex-col items-center space-y-4">
+            <button onclick="location.href = 'https://github.com/userandaname/OpenVLE'" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition" title="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="w-7 h-7 text-black dark:text-white" fill="currentColor">
+                    <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/>
+                </svg>
+            </button>
+            <button onclick="document.documentElement.classList.toggle('dark')" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition" title="Toggle themes">🌙</button>
+            <button onclick="location.href = 'https://github.com/userandaname/OpenVLE'" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition" title="Sign out">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 text-black dark:text-red-600" fill="currentColor">
+                    <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 p-6 space-y-6">
+      <header class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition">
+        <h2 class="text-xl font-semibold flex items-center">
+          <div class="mr-3">
+            <img id="openVLEAvatar" src="../assets/images/openVLE.png" alt="OpenVLE" class="w-12 h-12 rounded-full inline-block"/>
+          </div>
+          Hi,&nbsp;<span id="userName" class="text-rainbow" data-splitting>Unknown User</span>! 👋
+        </h2>
+        <div class="text-sm gap-3">
+            <img id="schoolLogo" alt="School logo" class="w-12 h-12 rounded-full inline-block"/>
+            <span id="schoolName" class="text-gray-500 dark:text-gray-400">Unknown School</span>
+        </div>
+      </header>
+
+      <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <section class="col-span-1 md:col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <h2 class="text-lg font-semibold mb-3 text-blue-500 dark:text-blue-400">My Subjects</h2>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-300 dark:border-gray-600">
+                <th class="text-left py-1">Subject</th>
+                <th class="text-left py-1">Class</th>
+                <th class="text-left py-1">Teacher</th>
+              </tr>
+            </thead>
+            <tbody id="subjectsBody"></tbody>
+          </table>
+        </section>
+
+        <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <h2 class="text-lg font-semibold mb-3">My Timetable</h2>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-300 dark:border-gray-600">
+                <th class="text-left py-1">Period</th>
+                <th class="text-left py-1">Subject</th>
+                <th class="text-left py-1">Teacher</th>
+                <th class="text-left py-1">Time</th>
+              </tr>
+            </thead>
+            <tbody id="timetableBody"></tbody>
+          </table>
+        </section>
+
+        <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-green-500 dark:text-green-500">Attendance</h2>
+                <span id="attendanceAmount" class="text-lg font-semibold text-right">N/A</span>
+          </div>
+          <ul class="space-y-1 text-sm">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-gray-300 dark:border-gray-600">
+                        <th class="text-left py-1">Period</th>
+                        <th class="text-left py-1">Subject</th>
+                        <th class="text-left py-1">Attendance</th>
+                        <th class="text-left py-1">Time</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceBody"></tbody>
+            </table>
+          </ul>
+        </section>
+
+        <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <h2 class="text-lg font-semibold mb-3 text-red-500">Reports</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">No reports found!</p>
+        </section>
+
+        <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <h2 class="text-lg font-semibold mb-3 text-yellow-500">Calendar Events</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">No events found!</p>
+        </section>
+
+        <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition">
+          <h2 class="text-lg font-semibold mb-3 text-purple-500">News</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">No news available!</p>
+        </section>
+      </main>
+
+      <div id="notificationToast" class="fixed left-1/2 bottom-[-100px] transform -translate-x-1/2 bg-white dark:bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-500 z-50 pointer-events-none opacity-0">
+        <span id="notificationText">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-6 h-6 text-green-500 dark:text-green-500 inline align-top" fill="currentColor">
+            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
+          </svg>
+          <span id="notificationMessage">>Connecting to OpenVLE...</span>
+          <span class="mx-3 border-l border-gray-300 dark:border-gray-600 h-6 inline-block align-middle"></span>
+          <span id="notificationLatency" class="text-gray-500 dark:text-gray-400">fein fein fein (real)</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
