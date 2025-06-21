@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             const json = JSON.parse(data.target.result);
                             const timetableBody = document.getElementById('timetableBody');
 
-                            if (timetableBody && Array.isArray(json)) {
+                            if (timetableBody && Array.isArray(json) && json.length > 0) {
                                 timetableBody.innerHTML = "";
 
                                 json.forEach(row => {
@@ -133,6 +133,17 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                                     timetableBody.appendChild(tr);
                                 });
+                            } else if (json.length === 0) {
+                                timetableBody.innerHTML = `
+                                    <tr>
+                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                                            No timetable data available!
+                                            <div class="flex justify-center mt-4">
+                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
                             }
                         } catch (error) {
                             console.error("Failed to parse timetable widget data:", error);
@@ -159,10 +170,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     reader.onload = function(data) {
                         try {
                             const json = JSON.parse(data.target.result);
-                            console.log(json);
                             const subjectsBody = document.getElementById('subjectsBody');
 
-                            if (subjectsBody && Array.isArray(json)) {
+                            if (subjectsBody && Array.isArray(json) && json.length > 0) {
                                 subjectsBody.innerHTML = "";
 
                                 json.forEach(row => {
@@ -181,6 +191,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
                                     subjectsBody.appendChild(tr);
                                 });
+                            } else if (json.length === 0) {
+                                subjectsBody.innerHTML = `
+                                    <tr>
+                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                                            No subject data available!
+                                            <br>
+                                            (FREEDOM FROM SCHOOL ENTIRELY?????)
+                                            <div class="flex justify-center mt-4">
+                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
                             }
                         } catch (error) {
                             console.error("Failed to parse subject widget data:", error);
@@ -213,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             let maxAttended = 0;
                             let attended = 0;
 
-                            if (attendanceBody && Array.isArray(json.attendanceList)) {
+                            if (attendanceBody && Array.isArray(json.attendanceList) && json.attendanceList.length > 0) {
                                 attendanceBody.innerHTML = "";
 
                                 json.attendanceList.forEach(row => {
@@ -265,6 +288,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 } else {
                                     attendanceAmount.classList.add('text-yellow-500');
                                 }
+                            } else if (json.attendanceList.length === 0) {
+                                attendanceBody.innerHTML = `
+                                    <tr>
+                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                                            No attendance data available!
+                                            <div class="flex justify-center mt-4">
+                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+
+                                attendanceAmount.textContent = "0/0";
+                                attendanceAmount.classList.add('text-gray-500');
+                                attendanceAmount.classList.add('dark:text-gray-400');
                             }
                         } catch (error) {
                             console.error("Failed to parse subject widget data:", error);
