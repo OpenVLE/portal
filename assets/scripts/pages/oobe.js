@@ -1,5 +1,4 @@
-function animateModalContent(html, afterRender) {
-    const modalContent = document.getElementById("modalContent");
+function animateModalContent(html, afterRender, modalContent = document.getElementById("modalContent")) {
     modalContent.classList.remove("opacity-100");
     modalContent.classList.add("opacity-0", "transition-opacity", "duration-500");
 
@@ -12,6 +11,20 @@ function animateModalContent(html, afterRender) {
             modalContent.classList.add("opacity-100");
         }, 10);
     }, 250);
+}
+
+function bromcomVLESSO(provider) {
+    window.addEventListener("message", function(event) {
+        if (event.data && event.data.type === "obtainSSOLinkCallback") {
+            const ssoURL = event.data.data;
+            this.location.href = ssoURL;
+        }
+    });
+
+    window.postMessage({
+        type: "obtainSSOURL",
+        data: { provider: provider }
+    }, "*");
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -52,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         ping();
     });
 
-    if (!serviceInstalled) {
+    if (!serviceInstalled) {        
         const installHTML = `
             <span class="w-16 h-16 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow flex items-center justify-center bg-gray-200 dark:bg-gray-700 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="w-9 h-9 text-gray-400" fill="currentColor">
@@ -72,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         animateModalContent(installHTML);
         return;
     } else {
-        const loginHTML = `
+        const vleHTML = `
             <span class="w-16 h-16 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow flex items-center justify-center bg-gray-200 dark:bg-gray-700 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-7 h-7 text-gray-400" fill="currentColor">
                     <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
@@ -88,10 +101,81 @@ document.addEventListener('DOMContentLoaded', async function() {
             </button>
         `;
 
-        animateModalContent(loginHTML, () => {
+        animateModalContent(vleHTML, () => {
             const bromcomVLELogin = document.getElementById("bromcomVLELogin");
+
             bromcomVLELogin.addEventListener("click", () => {
-                window.location.href = "https://vle.bromcom.com";
+                const ssoHTML = `
+                    <span class="w-16 h-16 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow flex items-center justify-center bg-gray-200 dark:bg-gray-700 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-7 h-7 text-gray-400" fill="currentColor">
+                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
+                        </svg>
+                    </span>
+
+                    <h2 class="text-lg mb-2 font-semibold text-gray-900 dark:text-gray-100">Login to OpenVLE</h2>
+                    <p class="text-sm mb-6 text-gray-500 dark:text-gray-400">Welome to OpenVLE! Next, select your SSO (Single Sign-On) provider.</p>
+
+                    <button id="googleSSOLogin" class="flex items-center justify-center w-full max-w-xs h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 mb-4">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-6 h-6 mr-3">
+                        <span class="text-gray-700 dark:text-gray-200 font-medium">Sign in with Google</span>
+                    </button>
+                    
+                    <button id="microsoftSSOLogin" class="flex items-center justify-center w-full max-w-xs h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 mb-4">
+                        <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.svg" alt="Microsoft" class="w-6 h-6 mr-3 bg-white rounded">
+                        <span class="text-gray-700 dark:text-gray-200 font-medium">Sign in with Microsoft</span>
+                    </button>
+                `;
+
+                animateModalContent(ssoHTML, () => {
+                    const googleSSOLogin = document.getElementById("googleSSOLogin");
+                    const microsoftSSOLogin = document.getElementById("microsoftSSOLogin");
+                    
+                    googleSSOLogin.addEventListener("click", () => {
+                        const loadingButtonHTML = `
+                            <div class="text-center">
+                                <div role="status">
+                                    <svg aria-hidden="true" class="inline w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        `;
+
+                        animateModalContent(loadingButtonHTML, () => {
+                            googleSSOLogin.disabled = true;
+                            microsoftSSOLogin.disabled = true;
+                            googleSSOLogin.classList.add("cursor-not-allowed");
+                            microsoftSSOLogin.classList.add("cursor-not-allowed");
+                            googleSSOLogin.classList.remove("hover:bg-gray-50", "dark:hover:bg-gray-700");
+
+                            bromcomVLESSO("google");
+                        }, googleSSOLogin);
+                    });
+
+                    microsoftSSOLogin.addEventListener("click", () => {
+                        const loadingButtonHTML = `
+                            <div class="text-center">
+                                <div role="status">
+                                    <svg aria-hidden="true" class="inline w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        `;
+
+                        animateModalContent(loadingButtonHTML, () => {
+                            googleSSOLogin.disabled = true;
+                            microsoftSSOLogin.disabled = true;
+                            googleSSOLogin.classList.add("cursor-not-allowed");
+                            microsoftSSOLogin.classList.add("cursor-not-allowed");
+                            microsoftSSOLogin.classList.remove("hover:bg-gray-50", "dark:hover:bg-gray-700");
+
+                            bromcomVLESSO("microsoft");
+                        }, microsoftSSOLogin);
+                    });
+                });
             });
         });
     }
