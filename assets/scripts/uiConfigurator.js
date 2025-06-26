@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     } else {
         while (!window.Splitting) {
             await sleep(50);
-            console.log("sad")
         }
 
         Splitting();

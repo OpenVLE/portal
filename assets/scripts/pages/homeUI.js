@@ -1,22 +1,97 @@
+function blobsInTheBig25IsCrazy(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function(data) {
+            try {
+                const object = data.target.result;
+
+                if (object.includes("<!DOCTYPE html>") || object.includes("<html>")) {
+                    location.href = "/login";
+                    return;
+                } else {
+                    resolve(JSON.parse(data.target.result));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        };
+
+        reader.onerror = reject;
+        reader.readAsText(blob);
+    });
+}
+
+async function contactAPI(url, headers = {}, excludeDataHeaders = true) {
+    return new Promise((resolve, reject) => {
+        window.postMessage({
+            type: "contactAPI",
+            data: {
+                url,
+                excludeDataHeaders,
+                options: {
+                    headers,
+                    referrer: "https://bromcomvle.com/Home/Dashboard",
+                    referrerPolicy: "strict-origin-when-cross-origin",
+                    method: "GET",
+                    mode: "cors",
+                    credentials: "include"
+                }
+            }
+        }, "*");
+
+        function messageHandler(event) {
+            if (event.data && event.data?.type === "apiResponse" && event.data.data.url === url) {
+                window.removeEventListener("message", messageHandler);
+
+                if (event.data.data.error) {
+                    reject(new Error(event.data.data.error));
+                } else {
+                    const base64 = event.data.data.body;
+                    const byteCharacters = atob(base64);
+                    const byteNumbers = new Array(byteCharacters.length);
+
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const type = event.data.data.contentType || undefined;
+                    const blob = new Blob([byteArray], type ? { type } : undefined);
+                    resolve(blob);
+                }
+            }
+        }
+
+        window.addEventListener("message", messageHandler);
+    });
+}
+
+const imageHeaders = {
+    "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+    "sec-fetch-dest": "image",
+    "sec-fetch-mode": "no-cors",
+    "sec-fetch-site": "same-origin"
+};
+
+const dataHeaders = {
+    "accept": "*/*",
+    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+    "cache-control": "no-cache",
+    "pragma": "no-cache",
+    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"macOS\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "no-cors",
+    "sec-fetch-site": "same-origin"
+};
+
 document.addEventListener('DOMContentLoaded', async function() {
-    function showNotification(message, connectionSuccessful = true, latency = "N/A", duration = 3000) {
-        const toast = document.getElementById('notificationToast');
-        const msg = document.getElementById('notificationMessage');
-        const latencyText = document.getElementById('notificationLatency');
-
-        msg.textContent = message;
-        latencyText.textContent = latency;
-        toast.classList.remove('opacity-0');
-        toast.classList.add('opacity-100');
-        toast.style.bottom = '40px';
-
-        setTimeout(() => {
-          toast.classList.remove('opacity-100');
-          toast.classList.add('opacity-0');
-          toast.style.bottom = '-100px';
-        }, duration);
-    }
-
     const serviceInstalled = await new Promise((resolve) => {
         const start = performance.now();
         let responded = false;
@@ -33,7 +108,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 responded = true;
                 const end = performance.now();
                 const duration = Math.round(end - start);
-                showNotification(`Connected to the OpenVLE Service!`, true, duration + "ms");
                 console.log(`heartbeat received after ${duration}ms`);
 
                 // --
@@ -55,398 +129,197 @@ document.addEventListener('DOMContentLoaded', async function() {
         ping();
     });
 
-    if (!serviceInstalled) return;
+    if (!serviceInstalled) return console.error("Service is not installed or not responding.");
 
-    window.addEventListener("message", function(event) {
-        if (event.data && event.data.type === "apiResponse") {
-            if (event.data.data.url === "https://bromcomvle.com/AccountSettings/GetPersonPhoto") {
-                let base64 = event.data.data.body;
+    (async () => {
+        await contactAPI("https://bromcomvle.com/AccountSettings/GetPersonPhoto", imageHeaders)
+        .then(blob => {
+            const imageURL = URL.createObjectURL(blob);
+            document.getElementById('openVLEAvatar').src = imageURL;
+        }).catch(error => {
+            console.error("Failed to apply user's pfp:", error);
+        });
+    })();
 
-                try {
-                    const byteCharacters = atob(base64);
-                    const byteNumbers = new Array(byteCharacters.length);
+    (async () => {
+        await contactAPI("https://bromcomvle.com/AccountSettings/GetSchoolPhoto", imageHeaders)
+        .then(blob => {
+            const imageURL = URL.createObjectURL(blob);
+            document.getElementById('schoolLogo').src = imageURL;
+        }).catch(error => {
+            console.error("Failed to apply school logo:", error);
+        });
+    })();
 
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
+    (async () => {
+        await contactAPI("https://bromcomvle.com/Home/GetTimetableWidgetData", dataHeaders)
+        .then(blob => blobsInTheBig25IsCrazy(blob))
+        .then(json => {
+            const timetableBody = document.getElementById('timetableBody');
 
-                    const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray]);
-                    const imageURL = URL.createObjectURL(blob);
+            if (timetableBody && Array.isArray(json) && json.length > 0) {
+                timetableBody.innerHTML = "";
+                json.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700";
+                    tr.innerHTML = `
+                        <td class="text-center py-1">Period ${row.period || "N/A"}</td>
+                        <td class="text-center">${row.subject || "N/A"}</td>
+                        <td class="text-center">${row.teacher || "N/A"}</td>
+                        <td class="text-center">${row.time || "N/A"}</td>
+                    `;
+                    timetableBody.appendChild(tr);
+                });
+            } else if (json.length === 0) {
+                timetableBody.innerHTML = `
+                    <tr>
+                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                            No timetable data available!
+                            <div class="flex justify-center mt-4">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }).catch(error => {
+            console.error("Failed to parse timetable widget data:", error);
+        });
+    })();
 
-                    document.getElementById('openVLEAvatar').src = imageURL;
-                } catch (error) {
-                    console.error("Failed to set the epic user's pfp:", error);
-                    console.log(base64)
-                }
-            } else if (event.data.data.url === "https://bromcomvle.com/AccountSettings/GetSchoolPhoto") {
-                let base64 = event.data.data.body;
+    (async () => {
+        await contactAPI("https://bromcomvle.com/Home/GetSubjectWidgetData", dataHeaders)
+        .then(blob => blobsInTheBig25IsCrazy(blob))
+        .then(json => {
+            const subjectsBody = document.getElementById('subjectsBody');
 
-                try {
-                    const byteCharacters = atob(base64);
-                    const byteNumbers = new Array(byteCharacters.length);
+            if (subjectsBody && Array.isArray(json) && json.length > 0) {
+                subjectsBody.innerHTML = "";
+                json.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer";
 
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
+                    tr.addEventListener('click', () => {
+                        window.location.href = `http://localhost:3000/subjects/${row.subjectId}`;
+                    });
 
-                    const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray]);
-                    const imageURL = URL.createObjectURL(blob);
+                    tr.innerHTML = `
+                        <td class="text-center py-1">${row.subjectName || "N/A"}</td>
+                        <td class="text-center">${row.className || "N/A"}</td>
+                        <td class="text-center">${row.teacherName || "N/A"}</td>
+                    `;
 
-                    document.getElementById('schoolLogo').src = imageURL;
-                } catch (error) {
-                    console.error("Failed to set the epic user's pfp:", error);
-                    console.log(base64)
-                }
-            } else if (event.data.data.url === "https://bromcomvle.com/Home/GetTimetableWidgetData") {
-                try {
-                    const byteCharacters = atob(event.data.data.body);
-                    const byteNumbers = new Array(byteCharacters.length);
+                    subjectsBody.appendChild(tr);
+                });
+            } else if (json.length === 0) {
+                subjectsBody.innerHTML = `
+                    <tr>
+                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                            No subject data available!
+                            <br>
+                            (FREEDOM FROM SCHOOL ENTIRELY?????)
+                            <div class="flex justify-center mt-4">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }).catch(error => {
+            console.error("Failed to parse subject widget data:", error);
+        });
+    })();
 
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
+    (async () => {
+        await contactAPI("https://bromcomvle.com/Home/GetAttendanceWidgetData", dataHeaders)
+        .then(blob => blobsInTheBig25IsCrazy(blob))
+        .then(json => {
+            function setAttendance(percent) {
+                const circle = document.getElementById('attendanceCircle');
+                const radius = 24;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference * (1 - percent / 100);
+                circle.style.strokeDasharray = circumference;
+                circle.style.strokeDashoffset = offset;
+            }
 
-                    const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray], { type: "application/json" });
-                    const reader = new FileReader();
+            const attendanceBody = document.getElementById('attendanceBody');
+            const attendanceAmount = document.getElementById('attendanceAmount');
+            let maxAttended = 0;
+            let attended = 0;
 
-                    reader.onload = function(data) {
-                        try {
-                            const json = JSON.parse(data.target.result);
-                            const timetableBody = document.getElementById('timetableBody');
+            if (attendanceBody && Array.isArray(json.attendanceList) && json.attendanceList.length > 0) {
+                attendanceBody.innerHTML = "";
 
-                            if (timetableBody && Array.isArray(json) && json.length > 0) {
-                                timetableBody.innerHTML = "";
+                json.attendanceList.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700";
+                    maxAttended++;
 
-                                json.forEach(row => {
-                                    const tr = document.createElement('tr');
-                                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700";
-
-                                    tr.innerHTML = `
-                                        <td class="py-1">${row.period || "N/A"}</td>
-                                        <td>${row.subject || "N/A"}</td>
-                                        <td>${row.teacher || "N/A"}</td>
-                                        <td>${row.time || "N/A"}</td>
-                                    `;
-
-                                    timetableBody.appendChild(tr);
-                                });
-                            } else if (json.length === 0) {
-                                timetableBody.innerHTML = `
-                                    <tr>
-                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
-                                            No timetable data available!
-                                            <div class="flex justify-center mt-4">
-                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `;
-                            }
-                        } catch (error) {
-                            console.error("Failed to parse timetable widget data:", error);
+                    const attendanceColor = (() => {
+                        switch (row.markDescription) {
+                            case json.presentAttendance:
+                                attended++;
+                                return json.presentAttendanceColor;
+                            case json.notTakenAttendance:
+                                return json.notTakenAttendanceColor;
+                            case json.unAuthorisedAbsentAttendance:
+                                return json.unAuthorisedAbsentAttendanceColor;
+                            case json.authorisedAbsentAttendance:
+                                return json.authorisedAbsentAttendanceColor;
+                            case json.lateAttendance:
+                                attended++;
+                                return json.lateAttendanceColor;
+                            default:
+                                return "#cccccc";
                         }
-                    };
+                    })();
 
-                    reader.readAsText(blob);
-                } catch (error) {
-                    console.error("Failed to convert blob to JSON:", error);
+                    tr.innerHTML = `
+                        <td class="text-center py-1">${row.periods || "N/A"}</td>
+                        <td class="text-center">${row.classSubjects || "N/A"}</td>
+                        <td class="text-center py-1">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-7 h-7 mx-auto" fill="${attendanceColor}">
+                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
+                                </svg>
+                            </span>
+                        </td>
+                        <td class="text-center">${row.startDate ? new Date(row.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A"}</td>
+                    `;
+
+                    attendanceBody.appendChild(tr);
+                });
+
+                attendanceAmount.textContent = `${attended}/${maxAttended}`;
+
+                if (attended === maxAttended) {
+                    attendanceAmount.classList.add('text-green-500');
+                } else if (attended === 0) {
+                    attendanceAmount.classList.add('text-red-500');
+                } else {
+                    attendanceAmount.classList.add('text-yellow-500');
                 }
-            } else if (event.data.data.url === "https://bromcomvle.com/Home/GetSubjectWidgetData") {
-                try {
-                    const byteCharacters = atob(event.data.data.body);
-                    const byteNumbers = new Array(byteCharacters.length);
+            } else if (json.attendanceList.length === 0) {
+                attendanceBody.innerHTML = `
+                    <tr>
+                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                            No attendance data available!
+                            <div class="flex justify-center mt-4">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
-
-                    const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray], { type: "application/json" });
-                    const reader = new FileReader();
-
-                    reader.onload = function(data) {
-                        try {
-                            const json = JSON.parse(data.target.result);
-                            const subjectsBody = document.getElementById('subjectsBody');
-
-                            if (subjectsBody && Array.isArray(json) && json.length > 0) {
-                                subjectsBody.innerHTML = "";
-
-                                json.forEach(row => {
-                                    const tr = document.createElement('tr');
-                                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer";
-
-                                    tr.addEventListener('click', () => {
-                                        window.location.href = `http://localhost:3000/subjects/${row.subjectId}`;
-                                    });
-
-                                    tr.innerHTML = `
-                                        <td class="py-1">${row.subjectName || "N/A"}</td>
-                                        <td>${row.className || "N/A"}</td>
-                                        <td>${row.teacherName || "N/A"}</td>
-                                    `;
-
-                                    subjectsBody.appendChild(tr);
-                                });
-                            } else if (json.length === 0) {
-                                subjectsBody.innerHTML = `
-                                    <tr>
-                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
-                                            No subject data available!
-                                            <br>
-                                            (FREEDOM FROM SCHOOL ENTIRELY?????)
-                                            <div class="flex justify-center mt-4">
-                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `;
-                            }
-                        } catch (error) {
-                            console.error("Failed to parse subject widget data:", error);
-                        }
-                    };
-
-                    reader.readAsText(blob);
-                } catch (error) {
-                    console.error("Failed to convert blob to JSON:", error);
-                }
-            } else if (event.data.data.url === "https://bromcomvle.com/Home/GetAttendanceWidgetData") {
-                try {
-                    const byteCharacters = atob(event.data.data.body);
-                    const byteNumbers = new Array(byteCharacters.length);
-
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
-
-                    const byteArray = new Uint8Array(byteNumbers);
-                    const blob = new Blob([byteArray], { type: "application/json" });
-                    const reader = new FileReader();
-
-                    reader.onload = function(data) {
-                        try {
-                            const json = JSON.parse(data.target.result);
-                            console.log(json);
-                            const attendanceBody = document.getElementById('attendanceBody');
-                            const attendanceAmount = document.getElementById('attendanceAmount');
-                            let maxAttended = 0;
-                            let attended = 0;
-
-                            if (attendanceBody && Array.isArray(json.attendanceList) && json.attendanceList.length > 0) {
-                                attendanceBody.innerHTML = "";
-
-                                json.attendanceList.forEach(row => {
-                                    const tr = document.createElement('tr');
-                                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700";
-                                    maxAttended++;
-
-                                    const attendanceColor = (() => {
-                                        switch (row.markDescription) {
-                                            case json.presentAttendance:
-                                                attended++;
-                                                return json.presentAttendanceColor;
-                                            case json.notTakenAttendance:
-                                                return json.notTakenAttendanceColor;
-                                            case json.unAuthorisedAbsentAttendance:
-                                                return json.unAuthorisedAbsentAttendanceColor;
-                                            case json.authorisedAbsentAttendance:
-                                                return json.authorisedAbsentAttendanceColor;
-                                            case json.lateAttendance:
-                                                attended++;
-                                                return json.lateAttendanceColor;
-                                            default:
-                                                return "#cccccc";
-                                        }
-                                    })();
-
-                                    tr.innerHTML = `
-                                        <td class="py-1">${row.periods || "N/A"}</td>
-                                        <td>${row.classSubjects || "N/A"}</td>
-                                        <td class="py-1">
-                                            <span class="flex justify-center items-center h-full">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-7 h-7 mx-auto" fill="${attendanceColor}">
-                                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
-                                                </svg>
-                                            </span>
-                                        </td>
-                                        <td>${row.startDate ? new Date(row.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A"}</td>
-                                    `;
-
-                                    attendanceBody.appendChild(tr);
-                                });
-
-                                attendanceAmount.textContent = `${attended}/${maxAttended}`;
-
-                                if (attended === maxAttended) {
-                                    attendanceAmount.classList.add('text-green-500');
-                                } else if (attended === 0) {
-                                    attendanceAmount.classList.add('text-red-500');
-                                } else {
-                                    attendanceAmount.classList.add('text-yellow-500');
-                                }
-                            } else if (json.attendanceList.length === 0) {
-                                attendanceBody.innerHTML = `
-                                    <tr>
-                                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
-                                            No attendance data available!
-                                            <div class="flex justify-center mt-4">
-                                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `;
-
-                                attendanceAmount.textContent = "0/0";
-                                attendanceAmount.classList.add('text-gray-500');
-                                attendanceAmount.classList.add('dark:text-gray-400');
-                            }
-                        } catch (error) {
-                            console.error("Failed to parse subject widget data:", error);
-                        }
-                    };
-
-                    reader.readAsText(blob);
-                } catch (error) {
-                    console.error("Failed to convert blob to JSON:", error);
-                }
+                attendanceAmount.textContent = "0/0";
+                attendanceAmount.classList.add('text-gray-500');
+                attendanceAmount.classList.add('dark:text-gray-400');
             }
-        }
-    });
 
-    // all the boring net requests below..
-
-    window.postMessage({
-        type: "contactAPI",
-        data: {
-            url: "https://bromcomvle.com/AccountSettings/GetPersonPhoto",
-            excludeDataHeaders: true,
-            options: {
-                headers: {
-                    "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-                    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-                    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"macOS\"",
-                    "sec-fetch-dest": "image",
-                    "sec-fetch-mode": "no-cors",
-                    "sec-fetch-site": "same-origin"
-                },
-                referrer: "https://bromcomvle.com/Home/Dashboard",
-                referrerPolicy: "strict-origin-when-cross-origin",
-                method: "GET",
-                mode: "cors",
-                credentials: "include"
-            }
-        }
-    }, "*");
-
-    window.postMessage({
-        type: "contactAPI",
-        data: {
-            url: "https://bromcomvle.com/AccountSettings/GetSchoolPhoto",
-            excludeDataHeaders: true,
-            options: {
-                headers: {
-                    "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-                    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-                    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"macOS\"",
-                    "sec-fetch-dest": "image",
-                    "sec-fetch-mode": "no-cors",
-                    "sec-fetch-site": "same-origin"
-                },
-                referrer: "https://bromcomvle.com/Home/Dashboard",
-                referrerPolicy: "strict-origin-when-cross-origin",
-                method: "GET",
-                mode: "cors",
-                credentials: "include"
-            }
-        }
-    }, "*");
-
-    window.postMessage({
-        type: "contactAPI",
-        data: {
-            url: "https://bromcomvle.com/Home/GetTimetableWidgetData",
-            excludeDataHeaders: true,
-            options: {
-                headers: {
-                    "accept": "*/*",
-                    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-                    "cache-control": "no-cache",
-                    "pragma": "no-cache",
-                    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"macOS\"",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "no-cors",
-                    "sec-fetch-site": "same-origin"
-                },
-                referrer: "https://bromcomvle.com/Home/Dashboard",
-                referrerPolicy: "strict-origin-when-cross-origin",
-                method: "GET",
-                mode: "cors",
-                credentials: "include"
-            }
-        }
-    }, "*");
-
-    window.postMessage({
-        type: "contactAPI",
-        data: {
-            url: "https://bromcomvle.com/Home/GetSubjectWidgetData",
-            excludeDataHeaders: true,
-            options: {
-                headers: {
-                    "accept": "*/*",
-                    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-                    "cache-control": "no-cache",
-                    "pragma": "no-cache",
-                    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"macOS\"",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "no-cors",
-                    "sec-fetch-site": "same-origin"
-                },
-                referrer: "https://bromcomvle.com/Home/Dashboard",
-                referrerPolicy: "strict-origin-when-cross-origin",
-                method: "GET",
-                mode: "cors",
-                credentials: "include"
-            }
-        }
-    }, "*");
-
-    window.postMessage({
-        type: "contactAPI",
-        data: {
-            url: "https://bromcomvle.com/Home/GetAttendanceWidgetData",
-            excludeDataHeaders: true,
-            options: {
-                headers: {
-                    "accept": "*/*",
-                    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-                    "cache-control": "no-cache",
-                    "pragma": "no-cache",
-                    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"macOS\"",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "no-cors",
-                    "sec-fetch-site": "same-origin"
-                },
-                referrer: "https://bromcomvle.com/Home/Dashboard",
-                referrerPolicy: "strict-origin-when-cross-origin",
-                method: "GET",
-                mode: "cors",
-                credentials: "include"
-            }
-        }
-    }, "*");
+            setAttendance(Math.round((attended / maxAttended) * 100));
+        }).catch(error => {
+            console.error("Failed to parse attendance widget data:", error);
+        });
+    })();
 });
