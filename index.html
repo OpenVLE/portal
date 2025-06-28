@@ -19,16 +19,19 @@
     <!-- epic scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <script type="module" src="assets/scripts/overviewOrdering.js"></script>
     <script type="module" src="assets/scripts/uiConfigurator.js"></script>
     <script type="module" src="assets/scripts/pages/homeUI.js"></script>
 
     <!-- its js the title rn but i feel the need to add a comment here to match everything else to make it all look clean fr -->
-    <title>OpenVLE</title>
+    <title>Home | OpenVLE</title>
   </head>
   <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300" style="font-family: 'DM Sans', sans-serif;">
   <div class="flex min-h-screen">
       <aside class="w-20 bg-white dark:bg-gray-800 shadow-md flex flex-col items-center py-6">
-          <img id="openVLEAvatar" alt="Avatar" class="w-12 h-12 rounded-full border-2 border-blue-600 shadow"/>
+          <img src="assets/images/openVLE.png" alt="OpenVLE" class="w-12 h-12 rounded-full inline-block"/>
+            <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-0.5 mt-4 shadow">v1.0.0</span>
+          
 
           <!-- <div id="loadingModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm z-50">
             <button onclick="document.documentElement.classList.toggle('dark')" class="absolute top-4 right-4 flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition z-10" title="Toggle themes">
@@ -118,38 +121,47 @@
       <div class="flex-1 p-6 space-y-6">
         <header class="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition">
           <h2 class="text-xl font-semibold flex items-center">
-            <div class="mr-3">
-              <img id="openVLEAvatar" src="assets/images/openVLE.png" alt="OpenVLE" class="w-12 h-12 rounded-full inline-block"/>
+            <div id="avatarContainer" class="mr-3">
+              <span id="placeholderAvatar" class="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 text-gray-400" fill="currentColor">
+                  <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/>
+                </svg>
+              </span>
             </div>
-            Hi,&nbsp;<span id="userName" class="text-rainbow" data-splitting>Unknown User</span>! 👋
+            Hi,&nbsp;
+            <span id="userName" class="text-rainbow" data-splitting>Unknown User</span>! 👋
           </h2>
-          <div class="flex items-center text-sm gap-3">
-              <img id="schoolLogo" alt="School logo" class="w-12 h-12 rounded-full inline-block"/>
+          <div id="schoolLogoContainer" class="flex items-center text-sm gap-3">
+              <span id="placeholderSchoolLogo" class="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="w-6 h-6 text-gray-400" fill="currentColor">
+                  <path d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9l0 28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5l0-24.6c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"/>
+                </svg>
+              </span>
               <span id="schoolName" class="text-gray-500 dark:text-gray-400">Unknown School</span>
           </div>
         </header>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-          <section class="col-span-1 md:col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #3b82f633;">
+        <main id="overviewCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+          <section draggable="true" class="overviewCard col-span-1 md:col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #3b82f633;">
             <h2 class="justify-center font-semibold mb-3 text-blue-500 dark:text-blue-400 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 512 512">
-                <path d="M0 32C0 14.3 14.3 0 32 0L96 0c17.7 0 32 14.3 32 32l0 64L0 96 0 32zm0 96l128 0 0 256L0 384 0 128zM0 416l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zM160 32c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 64L160 96l0-64zm0 96l128 0 0 256-128 0 0-256zm0 288l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zm203.6-19.9L320 232.6l0-89.9 100.4-26.9 66 247.4L363.6 396.1zM412.2 85L320 109.6 320 11l36.9-9.9c16.9-4.6 34.4 5.5 38.9 22.6L412.2 85zM371.8 427l122.8-32.9 16.3 61.1c4.5 17-5.5 34.5-22.5 39.1l-61.4 16.5c-16.9 4.6-34.4-5.5-38.9-22.6L371.8 427z"/>
+                <path d="M0 32C0 14.3 14.3 0 32 0L96 0c17.7 0 32 14.3 32 32l0 64L0 96 0 32zm0 96l128 0 0 256L0 384 0 128zM0 416l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zM160 32c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 64L160 96l0-64zm0 96l128 0 0 256-128 0 0-256zm0 288l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32-32l0-64zm203.6-19.9L320 232.6l0-89.9 100.4-26.9 66 247.4L363.6 396.1zM412.2 85L320 109.6 320 11l36.9-9.9c16.9-4.6 34.4 5.5 38.9 22.6L412.2 85zM371.8 427l122.8-32.9 16.3 61.1c4.5 17-5.5 34.5-22.5 39.1l-61.4 16.5c-16.9 4.6-34.4-5.5-38.9-22.6L371.8 427z"/>
               </svg>
               My Subjects
             </h2>
             <table class="w-full text-sm rounded-xl overflow-hidden shadow border border-blue-200 dark:border-blue-900">
               <thead>
                 <tr class="bg-blue-50 dark:bg-blue-900 border-b border-blue-200 dark:border-blue-800">
-                    <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Subject</th>
-                    <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Class</th>
-                    <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Teacher</th>
+                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Subject</th>
+                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Class</th>
+                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Teacher</th>
                 </tr>
               </thead>
               <tbody id="subjectsBody" class="divide-y divide-blue-100 dark:divide-blue-800"></tbody>
             </table>
           </section>
 
-          <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #14b8a633;">
+          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #14b8a633;">
             <h2 class="justify-center font-semibold mb-3 text-teal-500 dark:text-teal-400 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-teal-500 dark:text-teal-400" fill="currentColor" viewBox="0 0 512 512">
                 <path d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/>
@@ -169,7 +181,7 @@
             </table>
           </section>
 
-          <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #22c55e33;">
+          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #22c55e33;">
             <h2 class="justify-center font-semibold mb-3 text-green-500 dark:text-green-500 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-green-500 dark:text-green-500" fill="currentColor" viewBox="0 0 640 512">
                 <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM625 177L497 305c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L591 143c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
@@ -193,17 +205,17 @@
             </ul>
           </section>
 
-          <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f9731633;">
+          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f9731633;">
             <h2 class="text-lg font-semibold mb-3 text-red-500">Reports</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">No reports found!</p>
           </section>
 
-          <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f59e0b33;">
+          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f59e0b33;">
             <h2 class="text-lg font-semibold mb-3 text-yellow-500">Calendar Events</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">No events found!</p>
           </section>
 
-          <section class="col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #a855f733;">
+          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #a855f733;">
             <h2 class="text-lg font-semibold mb-3 text-purple-500">News</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">No news found!</p>
           </section>

@@ -134,8 +134,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     (async () => {
         await contactAPI("https://bromcomvle.com/AccountSettings/GetPersonPhoto", imageHeaders)
         .then(blob => {
+            const placeholderAvatar = document.getElementById('placeholderAvatar');
+            const avatarContainer = document.getElementById('avatarContainer');
             const imageURL = URL.createObjectURL(blob);
-            document.getElementById('openVLEAvatar').src = imageURL;
+
+            if (placeholderAvatar) {
+                const userAvatar = document.createElement('img');
+                userAvatar.classList.add('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', 'shadow');
+                userAvatar.id = 'openVLEAvatar';
+                userAvatar.src = imageURL;
+
+                avatarContainer.appendChild(userAvatar);
+                placeholderAvatar.remove();
+            }
         }).catch(error => {
             console.error("Failed to apply user's pfp:", error);
         });
@@ -144,8 +155,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     (async () => {
         await contactAPI("https://bromcomvle.com/AccountSettings/GetSchoolPhoto", imageHeaders)
         .then(blob => {
+            const placeholderLogo = document.getElementById('placeholderSchoolLogo');
+            const schoolLogoContainer = document.getElementById('schoolLogoContainer');
             const imageURL = URL.createObjectURL(blob);
-            document.getElementById('schoolLogo').src = imageURL;
+
+            if (placeholderLogo) {
+                const schoolLogo = document.createElement('img');
+                schoolLogo.classList.add('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'flex', 'items-center', 'justify-center');
+                schoolLogo.id = 'schoolLogo';
+                schoolLogo.src = imageURL;
+
+                schoolLogoContainer.prepend(schoolLogo);
+                placeholderLogo.remove();
+            }
         }).catch(error => {
             console.error("Failed to apply school logo:", error);
         });
@@ -166,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <td class="text-center py-1">Period ${row.period || "N/A"}</td>
                         <td class="text-center">${row.subject || "N/A"}</td>
                         <td class="text-center">${row.teacher || "N/A"}</td>
-                        <td class="text-center">${row.time || "N/A"}</td>
+                        <td class="text-center">${row.time ? new Date(row.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A"}</td>
                     `;
                     timetableBody.appendChild(tr);
                 });
