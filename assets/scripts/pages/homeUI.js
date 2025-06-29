@@ -184,18 +184,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                 json.forEach(row => {
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700";
+
                     tr.innerHTML = `
                         <td class="text-center py-1">Period ${row.period || "N/A"}</td>
                         <td class="text-center">${row.subject || "N/A"}</td>
                         <td class="text-center">${row.teacher || "N/A"}</td>
                         <td class="text-center">${row.time ? new Date(row.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A"}</td>
                     `;
+
                     timetableBody.appendChild(tr);
                 });
             } else if (json.length === 0) {
                 timetableBody.innerHTML = `
                     <tr>
-                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                        <td colspan='4' class='text-center py-4 text-gray-500 dark:text-gray-400'>
                             No timetable data available!
                             <div class="flex justify-center mt-4">
                                 <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
@@ -222,7 +224,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer";
 
                     tr.addEventListener('click', () => {
-                        window.location.href = `http://localhost:3000/subjects/${row.subjectId}`;
+                        window.location.href = `/subjects/${row.subjectId}`;
                     });
 
                     tr.innerHTML = `
@@ -236,7 +238,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             } else if (json.length === 0) {
                 subjectsBody.innerHTML = `
                     <tr>
-                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                        <td colspan='4' class='text-center py-4 text-gray-500 dark:text-gray-400'>
                             No subject data available!
                             <br>
                             (FREEDOM FROM SCHOOL ENTIRELY?????)
@@ -325,7 +327,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             } else if (json.attendanceList.length === 0) {
                 attendanceBody.innerHTML = `
                     <tr>
-                        <td colspan='4' class='text-center py-2 text-gray-500 dark:text-gray-400'>
+                        <td colspan='4' class='text-center py-4 text-gray-500 dark:text-gray-400'>
                             No attendance data available!
                             <div class="flex justify-center mt-4">
                                 <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
@@ -342,6 +344,47 @@ document.addEventListener('DOMContentLoaded', async function() {
             setAttendance(Math.round((attended / maxAttended) * 100));
         }).catch(error => {
             console.error("Failed to parse attendance widget data:", error);
+        });
+    })();
+
+    (async () => {
+        await contactAPI("https://bromcomvle.com/Home/GetCalendarEventsWidgetData", dataHeaders)
+        .then(blob => blobsInTheBig25IsCrazy(blob))
+        .then(json => {
+            const behaviourBody = document.getElementById('behaviourBody');
+
+            if (behaviourBody && Array.isArray(json) && json.length > 0) {
+                behaviourBody.innerHTML = "";
+                json.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer";
+
+                    tr.addEventListener('click', () => {
+                        window.location.href = `http://localhost:3000/behaviour/${row.id}`;
+                    });
+
+                    tr.innerHTML = `
+                        <td class="text-center py-1">${row.type || "N/A"}</td>
+                        <td class="text-center">${row.description || "N/A"}</td>
+                        <td class="text-center">${row.date ? new Date(row.date).toLocaleDateString() : "N/A"}</td>
+                    `;
+
+                    behaviourBody.appendChild(tr);
+                });
+            } else if (json.length === 0) {
+                behaviourBody.innerHTML = `
+                    <tr>
+                        <td colspan='3' class='text-center py-4 text-gray-500 dark:text-gray-400'>
+                            No behaviour data available!
+                            <div class="flex justify-center mt-4">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }).catch(error => {
+            console.error("Failed to parse behaviour widget data:", error);
         });
     })();
 });
