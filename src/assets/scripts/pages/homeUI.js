@@ -162,7 +162,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 responded = true;
                 const end = performance.now();
                 const duration = Math.round(end - start);
-                console.log(`heartbeat received after ${duration}ms`);
+                const serviceLatency = document.getElementById("serviceLatency");
+                serviceLatency.textContent = `${duration}ms`;
 
                 // --
 
@@ -204,7 +205,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     } else {
         const title = document.getElementById("modalTitle");
-        title.textContent = "Loading...";
+        const description = document.getElementById("modalDescription");
+        title.textContent = "Validating session...";
+        description.textContent = "Checking if you already have an OpenVLE session...";
 
         const userData = await new Promise(async (resolve, reject) => {
             await contactAPI("https://bromcomvle.com/Home/Dashboard", dataHeaders)
@@ -249,11 +252,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </span>
 
                 <h2 class="text-lg mb-2 font-semibold text-gray-900 dark:text-gray-100">Login to OpenVLE</h2>
-                <p class="text-sm mb-6 text-gray-500 dark:text-gray-400">Welcome to OpenVLE! To get started, select your current VLE provider.</p>
+                <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">Welcome to OpenVLE! To get started, select your current VLE provider.</p>
+
+                <hr class="w-12 border-t-2 border-gray-300 dark:border-gray-600 my-4"/>
 
                 <button id="bromcomVLELogin" class="flex items-center justify-center w-full max-w-xs h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 mb-4">
                     <img src="https://bromcom.com/app/themes/bromcom/assets/images/logo_mobile.svg" alt="BromcomVLE" class="w-6 h-6 mr-3">
                     <span class="text-gray-700 dark:text-gray-200 font-medium">Login with Bromcom</span>
+                </button>
+
+                <hr class="w-12 border-t-2 border-gray-300 dark:border-gray-600 my-1"/>
+
+                <button onclick="document.documentElement.classList.toggle('dark')" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition z-10 mt-6" style="align-self: center;" title="Toggle themes">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="w-6 h-6 text-black dark:text-white" fill="currentColor">
+                        <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+                    </svg>
                 </button>
             `;
 
@@ -269,7 +282,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </span>
 
                         <h2 class="text-lg mb-2 font-semibold text-gray-900 dark:text-gray-100">Login to OpenVLE</h2>
-                        <p class="text-sm mb-6 text-gray-500 dark:text-gray-400">Welome to OpenVLE! Next, select your SSO (Single Sign-On) provider.</p>
+                        <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">Welome to OpenVLE! Next, select your SSO (Single Sign-On) provider.</p>
+
+                        <hr class="w-12 border-t-2 border-gray-300 dark:border-gray-600 my-4"/>
 
                         <button id="googleSSOLogin" class="flex items-center justify-center w-full max-w-xs h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 mb-4">
                             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-6 h-6 mr-3">
@@ -279,6 +294,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <button id="microsoftSSOLogin" class="flex items-center justify-center w-full max-w-xs h-12 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 mb-4">
                             <img src="https://learn.microsoft.com/en-us/entra/identity-platform/media/howto-add-branding-in-apps/ms-symbollockup_mssymbol_19.svg" alt="Microsoft" class="w-6 h-6 mr-3 bg-white rounded">
                             <span class="text-gray-700 dark:text-gray-200 font-medium">Sign in with Microsoft</span>
+                        </button>
+
+                        <hr class="w-12 border-t-2 border-gray-300 dark:border-gray-600 my-1"/>
+
+                        <button onclick="document.documentElement.classList.toggle('dark')" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xl transition z-10 mt-6" style="align-self: center;" title="Toggle themes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="w-6 h-6 text-black dark:text-white" fill="currentColor">
+                                <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+                            </svg>
                         </button>
                     `;
 
@@ -335,6 +358,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 });
             });
         } else {
+            title.textContent = "Logging in...";
+            description.textContent = "Fetching your data...";
+
             const modal = document.getElementById("loadingModal");
             const userNameElement = document.getElementById("userName");
             const schoolNameElement = document.getElementById("schoolName");
