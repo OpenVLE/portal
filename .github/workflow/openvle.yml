@@ -1,0 +1,24 @@
+name: Deploy OpenVLE
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: ./src
+
+      - name: Deploy OpenVLE Portal
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          branch: production
