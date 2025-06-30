@@ -7,18 +7,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-            path: ./src
-
-      - name: Deploy OpenVLE Portal
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          branch: production
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./src
+          publish_branch: production
+          commit_message: "Deploy OpenVLE Portal"
