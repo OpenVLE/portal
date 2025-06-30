@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             <h2 class="text-lg mb-2 font-semibold text-gray-900 dark:text-gray-100">Install OpenVLE Service</h2>
             <p class="text-sm mb-6 text-gray-500 dark:text-gray-400">To use OpenVLE, you are required to add the OpenVLE Service to your browser.</p>
 
-            <a class="w-full max-w-xs h-16 object-contain rounded-xl" href="https://chromewebstore.google.com/detail/mdbgncibfiakpehpdoikemajhfopagjc/preview?hl=en-GB&authuser=0" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-40 h-10 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300">
+            <a class="w-full max-w-xs h-16 object-contain rounded-xl" href="https://chromewebstore.google.com/detail/openvle-service/mdbgncibfiakpehpdoikemajhfopagjc" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-40 h-10 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300">
                 <img src="assets/images/webStoreDark.png" alt="OpenVLE Logo" class="w-full max-w-xs h-16 object-contain rounded-xl dark:hidden"/>
                 <img src="assets/images/webStoreLight.png" alt="OpenVLE Logo" class="w-full max-w-xs h-16 object-contain rounded-xl hidden dark:block"/>
             </a>
