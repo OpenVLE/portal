@@ -6,12 +6,11 @@ function blobsInTheBig25IsCrazy(blob) {
             try {
                 const object = data.target.result;
 
-                // if (object.includes("<!DOCTYPE html>") || object.includes("<html>")) {
-                //     location.href = "/login";
-                //     return;
-                // } else {
+                if (object.includes("<!DOCTYPE html>") || object.includes("<html>")) {
+                    return console.error("..we've broken the fourth wall");
+                } else {
                     resolve(JSON.parse(data.target.result));
-                // }
+                }
             } catch (error) {
                 reject(error);
             }
@@ -78,7 +77,13 @@ function bromcomVLESSO(provider, bromcom) {
         ssoURL = microsoftElement ? microsoftElement.getAttribute("href") : "";
     }
 
-    location.href = ssoURL;
+    window.addEventListener("message", function(event) {
+        if (event.data && event.data.type === "setOAuthCallback") {
+            location.href = ssoURL;
+        }
+    });
+
+    window.postMessage({ type: "setOAuthRedirect" }, "*");
 }
 
 function animateModalContent(html, afterRender, modalContent = document.getElementById("modalContent")) {
@@ -365,6 +370,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/AccountSettings/GetPersonPhoto", imageHeaders)
             .then(blob => {
                 const placeholderAvatar = document.getElementById('placeholderAvatar');
@@ -386,6 +393,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         })();
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/AccountSettings/GetSchoolPhoto", imageHeaders)
             .then(blob => {
                 const placeholderLogo = document.getElementById('placeholderSchoolLogo');
@@ -407,6 +416,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         })();
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/Home/GetTimetableWidgetData", dataHeaders)
             .then(blob => blobsInTheBig25IsCrazy(blob))
             .then(json => {
@@ -445,6 +456,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         })();
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/Home/GetSubjectWidgetData", dataHeaders)
             .then(blob => blobsInTheBig25IsCrazy(blob))
             .then(json => {
@@ -488,6 +501,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         })();
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/Home/GetAttendanceWidgetData", dataHeaders)
             .then(blob => blobsInTheBig25IsCrazy(blob))
             .then(json => {
@@ -570,6 +585,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         })();
 
         (async () => {
+            if (!userData.loggedIn) return;
+
             await contactAPI("https://bromcomvle.com/Home/GetCalendarEventsWidgetData", dataHeaders)
             .then(blob => blobsInTheBig25IsCrazy(blob))
             .then(json => {
