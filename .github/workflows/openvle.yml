@@ -1,4 +1,4 @@
-name: Deploy OpenVLE
+name: Build OpenVLE
 
 on:
   push:
@@ -12,10 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to GitHub Pages
+      - name: Build for GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./src
           publish_branch: production
-          commit_message: "Deploy OpenVLE Portal"
+          commit_message: "Build OpenVLE Portal"
