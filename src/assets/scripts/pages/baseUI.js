@@ -433,4 +433,22 @@ document.addEventListener("DOMContentLoaded", function() {
     const observer = new MutationObserver(checkSidebarScrollbar);
     observer.observe(sideBar, { childList: true, subtree: true });
     window.addEventListener("resize", checkSidebarScrollbar);
+
+    const homeButton = document.getElementById("homeButton");
+    const subjectsButton = document.getElementById("subjectsButton");
+    const homeworkButton = document.getElementById("homeworkButton");
+    const behaviourButton = document.getElementById("behaviourButton");
+    const attendanceButton = document.getElementById("attendanceButton");
+    const calendarButton = document.getElementById("calendarButton");
+    const newsButton = document.getElementById("newsButton");
+    const settingsButton = document.getElementById("settingsButton");
+
+    homeButton.addEventListener("click", () => { const url = "/"; location.pathname = url; });
+    subjectsButton.addEventListener("click", () => { const url = "/subjects"; location.pathname = url; });
+    homeworkButton.addEventListener("click", () => { const url = "/homework"; location.pathname = url; });
+    behaviourButton.addEventListener("click", () => { const url = "/behaviour"; location.pathname = url; });
+    attendanceButton.addEventListener("click", () => { const url = "/attendance"; location.pathname = url; });
+    calendarButton.addEventListener("click", () => { const url = "/calendar"; location.pathname = url; });
+    newsButton.addEventListener("click", () => { const url = "/news"; location.pathname = url; });
+    settingsButton.addEventListener("click", () => { const url = "/settings"; location.pathname = url; });
 });
