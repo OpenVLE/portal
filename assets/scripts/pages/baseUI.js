@@ -443,12 +443,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const newsButton = document.getElementById("newsButton");
     const settingsButton = document.getElementById("settingsButton");
 
-    homeButton.addEventListener("click", () => { const url = "/"; location.pathname = url; });
-    subjectsButton.addEventListener("click", () => { const url = "/subjects"; location.pathname = url; });
-    homeworkButton.addEventListener("click", () => { const url = "/homework"; location.pathname = url; });
-    behaviourButton.addEventListener("click", () => { const url = "/behaviour"; location.pathname = url; });
-    attendanceButton.addEventListener("click", () => { const url = "/attendance"; location.pathname = url; });
-    calendarButton.addEventListener("click", () => { const url = "/calendar"; location.pathname = url; });
-    newsButton.addEventListener("click", () => { const url = "/news"; location.pathname = url; });
-    settingsButton.addEventListener("click", () => { const url = "/settings"; location.pathname = url; });
+    homeButton.addEventListener("click", () => { location.pathname = "/" });
+    subjectsButton.addEventListener("click", () => { location.pathname = "/subjects" });
+    homeworkButton.addEventListener("click", () => { location.pathname = "/homework" });
+    behaviourButton.addEventListener("click", () => { location.pathname = "/behaviour" });
+    attendanceButton.addEventListener("click", () => { location.pathname = "/attendance" });
+    calendarButton.addEventListener("click", () => { location.pathname = "/calendar" });
+    newsButton.addEventListener("click", () => { location.pathname = "/news" });
+    settingsButton.addEventListener("click", () => { location.pathname = "/settings" });
 });
