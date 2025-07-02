@@ -66,19 +66,6 @@ async function contactAPI(url, headers = {}, excludeDataHeaders = true) {
     });
 }
 
-const dataHeaders = {
-    "accept": "*/*",
-    "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-    "cache-control": "no-cache",
-    "pragma": "no-cache",
-    "sec-ch-ua": "\"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"macOS\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "no-cors",
-    "sec-fetch-site": "same-origin"
-};
-
 window.loadCompleted.then((userData) => {
     (async () => {
         if (!userData.loggedIn) return;

@@ -7,30 +7,31 @@
 
     <!-- favicon and other lil assets -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" href="assets/images/favicons/favicon.ico" type="image/x-icon"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/openVLE.png"/>
-    <link rel="icon" type="image/png" sizes="128x128" href="assets/images/openVLE.png"/>
-    <link rel="icon" type="image/png" sizes="64x64" href="assets/images/openVLE.png"/>
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/openVLE.png"/>
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/openVLE.png"/>
+    <link rel="icon" href="../assets/images/favicons/favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/openVLE.png"/>
+    <link rel="icon" type="image/png" sizes="128x128" href="../assets/images/openVLE.png"/>
+    <link rel="icon" type="image/png" sizes="64x64" href="../assets/images/openVLE.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/openVLE.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/openVLE.png"/>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/stylesheet.css">
+    <link rel="stylesheet" href="../assets/css/stylesheet.css">
 
     <!-- epic scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
-    <script src="assets/scripts/overviewOrdering.js"></script>
-    <script src="assets/scripts/uiConfigurator.js"></script>
-    <script src="assets/scripts/pages/baseUI.js"></script>
-    <script src="assets/scripts/pages/homeUI.js"></script>
+    <script src="../assets/scripts/overviewOrdering.js"></script>
+    <script src="../assets/scripts/uiConfigurator.js"></script>
+    <script src="../assets/scripts/pages/baseUI.js"></script>
+    <script src="../assets/scripts/pages/behaviourUI.js"></script>
 
     <!-- its js the title rn but i feel the need to add a comment here to match everything else to make it all look clean fr -->
-    <title>Home | OpenVLE</title>
+    <title>Behaviour | OpenVLE</title>
   </head>
   <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300" style="font-family: 'DM Sans', sans-serif;">
   <div class="flex min-h-screen">
       <aside id="sideBar" class="w-20 bg-white dark:bg-gray-800 shadow-md flex flex-col items-center py-6 sticky top-0 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent" style="scrollbar-width: thin; scrollbar-color: #d1d5db #0000;">
-          <img src="assets/images/openVLE.png" alt="OpenVLE" class="w-12 h-12 rounded-full inline-block"/>
+          <img src="../assets/images/openVLE.png" alt="OpenVLE" class="w-12 h-12 rounded-full inline-block"/>
             <div class="flex flex-col items-center mt-4 space-y-2">
               <span id="verNum" class="text-xs font-semibold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-0.5 shadow">v1.0.0</span>
               <span id="serviceLatency" class="text-xs font-semibold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-0.5 shadow">26ms</span>
@@ -145,121 +146,38 @@
           </div>
         </header>
 
-        <main id="overviewCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-          <section draggable="true" class="overviewCard col-span-1 md:col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #3b82f633;">
-            <h2 class="justify-center font-semibold mb-3 text-blue-500 dark:text-blue-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 512 512">
-                <path d="M0 32C0 14.3 14.3 0 32 0L96 0c17.7 0 32 14.3 32 32l0 64L0 96 0 32zm0 96l128 0 0 256L0 384 0 128zM0 416l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32-14.3-32-32l0-64zM160 32c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 64L160 96l0-64zm0 96l128 0 0 256-128 0 0-256zm0 288l128 0 0 64c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32-32l0-64zm203.6-19.9L320 232.6l0-89.9 100.4-26.9 66 247.4L363.6 396.1zM412.2 85L320 109.6 320 11l36.9-9.9c16.9-4.6 34.4 5.5 38.9 22.6L412.2 85zM371.8 427l122.8-32.9 16.3 61.1c4.5 17-5.5 34.5-22.5 39.1l-61.4 16.5c-16.9 4.6-34.4-5.5-38.9-22.6L371.8 427z"/>
-              </svg>
-              My Subjects
-            </h2>
-            <table class="w-full text-sm rounded-xl overflow-hidden shadow border border-blue-200 dark:border-blue-900" style="box-shadow: 0 0 0 2px #3b82f633;">
-              <thead>
-                <tr class="bg-blue-50 dark:bg-blue-900 border-b border-blue-200 dark:border-blue-800">
-                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Subject</th>
-                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Class</th>
-                  <th class="text-center py-2 px-3 font-semibold text-blue-600 dark:text-blue-300 w-1/3">Teacher</th>
-                </tr>
-              </thead>
-              <tbody id="subjectsBody" class="divide-y divide-blue-100 dark:divide-blue-800">
-                <tr>
-                  <td colspan="4" class="text-center py-4 text-gray-500 dark:text-gray-400">No subject data found!</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #14b8a633;">
-            <h2 class="justify-center font-semibold mb-3 text-teal-500 dark:text-teal-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-teal-500 dark:text-teal-400" fill="currentColor" viewBox="0 0 512 512">
-                <path d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/>
-              </svg>
-              My Timetable
-            </h2>
-            <table class="w-full text-sm rounded-xl overflow-hidden shadow border border-teal-200 dark:border-teal-900" style="box-shadow: 0 0 0 2px #14b8a633;">
-              <thead>
-                <tr class="bg-teal-50 dark:bg-teal-900 border-b border-teal-200 dark:border-teal-800">
-                  <th class="text-center py-2 px-3 font-semibold text-teal-600 dark:text-teal-300 w-1/4">Period</th>
-                  <th class="text-center py-2 px-3 font-semibold text-teal-600 dark:text-teal-300 w-1/4">Subject</th>
-                  <th class="text-center py-2 px-3 font-semibold text-teal-600 dark:text-teal-300 w-1/4">Teacher</th>
-                  <th class="text-center py-2 px-3 font-semibold text-teal-600 dark:text-teal-300 w-1/4">Time</th>
-                </tr>
-              </thead>
-              <tbody id="timetableBody" class="divide-y divide-teal-100 dark:divide-teal-800">
-                <tr>
-                  <td colspan="4" class="text-center py-4 text-gray-500 dark:text-gray-400">No timetable data found!</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #22c55e33;">
-            <h2 class="justify-center font-semibold mb-3 text-green-500 dark:text-green-500 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-green-500 dark:text-green-500" fill="currentColor" viewBox="0 0 640 512">
-                <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM625 177L497 305c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L591 143c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
-              </svg>
-              Attendance
-              <span class="mx-2 text-green-600 dark:text-green-800">•</span>
-              <span id="attendanceAmount" class="inline">N/A</span>
-              <span class="mx-2 text-green-600 dark:text-green-800">•</span>
-                <button title="Attendance Info" class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-200 transition focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 512 512">
-                  <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336c-13.3 0-24 10.7-24 24s10.7 24 24 24l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-8 0 0-88c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24s10.7 24 24 24l24 0 0 64-24 0zm40-144a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
-                </svg>
-              </button>
-            </h2>
-            <ul class="space-y-1 text-sm">
-              <table class="w-full text-sm rounded-xl overflow-hidden shadow border border-green-200 dark:border-green-900" style="box-shadow: 0 0 0 2px #22c55e33;">
-                <thead>
-                  <tr class="bg-green-50 dark:bg-green-900 border-b border-green-200 dark:border-green-800">
-                    <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/4">Period</th>
-                    <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/4">Subject</th>
-                    <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/4">Attendance</th>
-                    <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/4">Time</th>
-                  </tr>
-                </thead>
-                <tbody id="attendanceBody" class="divide-y divide-green-100 dark:divide-green-800">
-                  <tr>
-                    <td colspan="4" class="text-center py-4 text-gray-500 dark:text-gray-400">No attendance records found!</td>
-                  </tr>
-                </tbody>
-              </table>
-            </ul>
-          </section>
-
-          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f9731633;">
-            <h2 class="text-lg font-semibold mb-3 text-red-500">Reports</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">No reports found!</p>
-          </section>
-
-          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #f59e0b33;">
-            <h2 class="justify-center font-semibold mb-3 text-yellow-500 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" viewBox="0 0 448 512">
-                <path d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 48 0c26.5 0 48 21.5 48 48l0 48L0 160l0-48C0 85.5 21.5 64 48 64l48 0 0-32c0-17.7 14.3-32 32-32zM0 192l448 0 0 272c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 192zm64 80l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm128 0l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zM64 400l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zm112 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16z"/>
-              </svg>
-              Calendar Events
-            </h2>
-            <table class="w-full text-sm rounded-xl overflow-hidden shadow border border-yellow-200 dark:border-yellow-900" style="box-shadow: 0 0 0 2px #f59e0b33;">
-              <thead>
-                <tr class="bg-yellow-50 dark:bg-yellow-900 border-b border-yellow-200 dark:border-yellow-800">
-                  <th class="text-center py-2 px-3 font-semibold text-yellow-600 dark:text-yellow-300 w-1/4">Event</th>
-                  <th class="text-center py-2 px-3 font-semibold text-yellow-600 dark:text-yellow-300 w-1/4">Date</th>
-                  <th class="text-center py-2 px-3 font-semibold text-yellow-600 dark:text-yellow-300 w-1/4">Time</th>
-                  <th class="text-center py-2 px-3 font-semibold text-yellow-600 dark:text-yellow-300 w-1/4">Location</th>
-                </tr>
-              </thead>
-              <tbody id="calendarEventsBody" class="divide-y divide-yellow-100 dark:divide-yellow-800">
-                <tr>
-                  <td colspan="4" class="text-center py-4 text-gray-500 dark:text-gray-400">No events found!</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <section draggable="true" class="overviewCard col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow hover:shadow-xl transition" style="box-shadow: 0 0 0 2px #a855f733;">
-            <h2 class="text-lg font-semibold mb-3 text-purple-500">News</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">No news found!</p>
-          </section>
+        <main id="overviewCards" class="items-center gap-6">
+            <div class="col-span-1 flex flex-col items-center bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 max-w-xs mx-auto justify-self-center self-center" style="box-shadow: 0 0 0 2px #22c55e33;">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Behaviour Points</h3>
+                <canvas id="behaviourPieChart" width="220" height="220" class="mb-5"></canvas>
+                <div id="customPieLabels" class="flex justify-center items-center gap-4 mb-3"></div>
+                <table class="w-full text-sm rounded-xl overflow-hidden border border-green-200 dark:border-green-900 mt-2" style="box-shadow: 0 0 0 2px #22c55e33;">
+                    <thead>
+                        <tr class="bg-green-50 dark:bg-green-900 border-b border-green-200 dark:border-green-800">
+                            <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/3">Type</th>
+                            <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/3">Points</th>
+                            <th class="text-center py-2 px-3 font-semibold text-green-600 dark:text-green-300 w-1/3">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-green-100 dark:divide-green-800 bg-white dark:bg-gray-800">
+                        <tr>
+                            <td class="text-center py-2 px-3 text-gray-600 dark:text-gray-300 font-semibold">Total</td>
+                            <td class="text-center py-2 px-3" id="totalPoints">N/A</td>
+                            <td class="text-center py-2 px-3" id="totalPercent">100.0%</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center py-2 px-3 text-green-600 dark:text-green-400 font-semibold">Positive</td>
+                            <td class="text-center py-2 px-3" id="positivePoints">N/A</td>
+                            <td class="text-center py-2 px-3" id="positivePercent">N/A</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center py-2 px-3 text-red-600 dark:text-red-400 font-semibold">Negative</td>
+                            <td class="text-center py-2 px-3" id="negativePoints">N/A</td>
+                            <td class="text-center py-2 px-3" id="negativePercent">N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
       </div>
     </div>
