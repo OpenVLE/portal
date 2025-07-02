@@ -205,7 +205,6 @@ window.loadCompleted = new Promise((resolve) => {
                             bromcomDashboard: bromcomDashboard
                         });
                     } else {
-                        console.log(bromcomDashboard)
                         const userName = bromcomDashboard.getElementById('UsernameLabel').textContent;
                         const schoolName = bromcomDashboard.getElementById('SchoolNameLabel').textContent;
 
