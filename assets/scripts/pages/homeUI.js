@@ -96,7 +96,7 @@ window.loadCompleted.then((userData) => {
                         <td colspan='4' class='text-center py-4 text-gray-500 dark:text-gray-400'>
                             No timetable data available!
                             <div class="flex justify-center mt-4">
-                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" style="box-shadow: 0 0 0 3px #14b8a633;" alt="heres a meme">
                             </div>
                         </td>
                     </tr>
@@ -141,7 +141,7 @@ window.loadCompleted.then((userData) => {
                             <br>
                             (FREEDOM FROM SCHOOL ENTIRELY?????)
                             <div class="flex justify-center mt-4">
-                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" style="box-shadow: 0 0 0 3px #3b82f633;" alt="heres a meme">
                             </div>
                         </td>
                     </tr>
@@ -251,7 +251,7 @@ window.loadCompleted.then((userData) => {
                         <td colspan='4' class='text-center py-4 text-gray-500 dark:text-gray-400'>
                             No attendance data available!
                             <div class="flex justify-center mt-4">
-                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" alt="heres a meme">
+                                <img src="assets/images/memery/ionknow.png" class="w-full max-w-xs h-auto object-contain rounded-lg" style="box-shadow: 0 0 0 3px #22c55e33;" alt="heres a meme">
                             </div>
                         </td>
                     </tr>
