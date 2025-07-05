@@ -156,6 +156,7 @@ window.loadCompleted.then((userData) => {
                         const isPositive = adjustmentValue > 0;
                         const isNegative = adjustmentValue < 0;
                         event.adjustmentColour = isPositive ? 'text-green-500' : isNegative ? 'text-red-600 dark:text-red-400' : 'text-green-500';
+                        event.adjustment = isPositive ? `+${adjustmentValue}` : adjustmentValue.toString();
                     }
 
                     if (event.date === '' || event.date === 'N/A') {
