@@ -21,7 +21,7 @@ function blobsInTheBig25IsCrazy(blob) {
     });
 }
 
-async function contactAPI(url, headers = {}, excludeDataHeaders = true) {
+async function contactAPI(url, headers = {}, excludeDataHeaders = true, method = "GET") {
     return new Promise((resolve, reject) => {
         window.postMessage({
             type: "contactAPI",
@@ -32,7 +32,7 @@ async function contactAPI(url, headers = {}, excludeDataHeaders = true) {
                     headers,
                     referrer: "https://bromcomvle.com/Home/Dashboard",
                     referrerPolicy: "strict-origin-when-cross-origin",
-                    method: "GET",
+                    method,
                     mode: "cors",
                     credentials: "include"
                 }
