@@ -136,27 +136,56 @@ window.loadCompleted.then((userData) => {
         .then(blob => blobsInTheBig25IsCrazy(blob))
         .then(json => {
             const studentEvents = json?.studentEvents || [];
+
+            const systemEventsCheckbox = document.getElementById('hideSystemEvents');
             const eventBody = document.getElementById('studentBehaviourEventBody');
-            const hideSystemEventsCheckbox = document.getElementById('hideSystemEvents');
             const shownEventCount = document.getElementById('shownEventCount');
             const totalEventCount = document.getElementById('totalEventCount');
 
+            function sortEvents(tbody) {
+                function formatDate(string) {
+                    const [dateString, timeString] = string.split(" ");
+                    const [day, month, year] = dateString.split("/").map(Number);
+                    const [hour, minute] = timeString.split(":").map(Number);
+                    const date = new Date(year, month - 1, day, hour, minute);
+
+                    return date;
+                }
+                
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    const dateA = formatDate(a.children[0]?.textContent || '');
+                    const dateB = formatDate(b.children[0]?.textContent || '');
+                    return dateB - dateA;
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+            }
+
             async function calculateEvents(studentEvents) {
-                eventBody.innerHTML = '';
                 const eventAmount = studentEvents.length;
+                eventBody.innerHTML = '';
                 let eventsProcessed = 0;
 
                 studentEvents.forEach(event => {
                     if (eventsProcessed >= 15) return;
-                    if (hideSystemEventsCheckbox.checked && event.teacher === "System") return;
+                    if (systemEventsCheckbox.checked && event.teacher === "System") return;
                     const row = document.createElement('tr');
 
                     if (event.adjustment !== '') {
                         const adjustmentValue = Number(event.adjustment);
                         const isPositive = adjustmentValue > 0;
-                        const isNegative = adjustmentValue < 0;
-                        event.adjustmentColour = isPositive ? 'text-green-500' : isNegative ? 'text-red-600 dark:text-red-400' : 'text-green-500';
-                        event.adjustment = isPositive ? `+${adjustmentValue}` : adjustmentValue.toString();
+
+                        if (isPositive) {
+                            row.id = "positiveEvent";
+                            event.adjustment = `+${adjustmentValue}`;
+                            event.adjustmentColour = 'text-green-500';
+                        } else {
+                            row.id = "negativeEvent";
+                            event.adjustment = adjustmentValue.toString();
+                            event.adjustmentColour = 'text-red-600 dark:text-red-400';
+                        }
                     }
 
                     if (event.date === '' || event.date === 'N/A') {
@@ -209,12 +238,13 @@ window.loadCompleted.then((userData) => {
                     eventsProcessed++;
                 });
 
+                sortEvents(eventBody);
                 shownEventCount.textContent = eventsProcessed;
                 totalEventCount.textContent = eventAmount;
             }
 
             calculateEvents(studentEvents);
-            hideSystemEventsCheckbox.addEventListener('change', calculateEvents.bind(null, studentEvents));
+            systemEventsCheckbox.addEventListener('change', calculateEvents.bind(null, studentEvents));
         })
         .catch(error => {
             console.error("Failed to fetch student behaviour data:", error);
