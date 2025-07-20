@@ -136,11 +136,16 @@ window.loadCompleted.then((userData) => {
         .then(blob => blobsInTheBig25IsCrazy(blob))
         .then(json => {
             const studentEvents = json?.studentEvents || [];
+            const idleClass = "sort-btn rounded-lg px-4 py-2 font-semibold border border-green-300 dark:border-green-700 bg-white dark:bg-gray-800 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition";
+            const selectedClass = "sort-btn rounded-lg px-4 py-2 font-semibold border border-green-300 dark:border-green-700 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-400 transition";
 
+            const positiveEventsButton = document.getElementById('positiveEventsButton');
+            const negativeEventsButton = document.getElementById('negativeEventsButton');
             const systemEventsCheckbox = document.getElementById('hideSystemEvents');
             const eventBody = document.getElementById('studentBehaviourEventBody');
             const shownEventCount = document.getElementById('shownEventCount');
             const totalEventCount = document.getElementById('totalEventCount');
+            const allEventsButton = document.getElementById('allEventsButton');
 
             function sortEvents(tbody) {
                 function formatDate(string) {
@@ -163,20 +168,23 @@ window.loadCompleted.then((userData) => {
                 rows.forEach(row => tbody.appendChild(row));
             }
 
-            async function calculateEvents(studentEvents) {
+            async function calculateEvents(studentEvents, type = 'all') {
                 const eventAmount = studentEvents.length;
                 eventBody.innerHTML = '';
                 let eventsProcessed = 0;
 
                 studentEvents.forEach(event => {
+                    const adjustmentValue = Number(event.adjustment);
+                    const isPositive = adjustmentValue > 0;
+
                     if (eventsProcessed >= 15) return;
                     if (systemEventsCheckbox.checked && event.teacher === "System") return;
+                    if (type === 'positive' && !isPositive) return;
+                    if (type === 'negative' && isPositive) return;
+
                     const row = document.createElement('tr');
 
                     if (event.adjustment !== '') {
-                        const adjustmentValue = Number(event.adjustment);
-                        const isPositive = adjustmentValue > 0;
-
                         if (isPositive) {
                             row.id = "positiveEvent";
                             event.adjustment = `+${adjustmentValue}`;
@@ -245,6 +253,27 @@ window.loadCompleted.then((userData) => {
 
             calculateEvents(studentEvents);
             systemEventsCheckbox.addEventListener('change', calculateEvents.bind(null, studentEvents));
+
+            allEventsButton.addEventListener('click', function() {
+                positiveEventsButton.className = idleClass;
+                negativeEventsButton.className = idleClass;
+                allEventsButton.className = selectedClass;
+                calculateEvents(studentEvents, 'all');
+            });
+
+            positiveEventsButton.addEventListener('click', function() {
+                positiveEventsButton.className = selectedClass;
+                negativeEventsButton.className = idleClass;
+                allEventsButton.className = idleClass;
+                calculateEvents(studentEvents, 'positive');
+            });
+
+            negativeEventsButton.addEventListener('click', function() {
+                positiveEventsButton.className = idleClass;
+                negativeEventsButton.className = selectedClass;
+                allEventsButton.className = idleClass;
+                calculateEvents(studentEvents, 'negative');
+            });
         })
         .catch(error => {
             console.error("Failed to fetch student behaviour data:", error);
