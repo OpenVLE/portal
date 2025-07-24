@@ -125,7 +125,7 @@ const dataHeaders = {
 window.loadCompleted = new Promise((resolve) => {
     document.addEventListener("DOMContentLoaded", async function() {
         (function() {
-            if (!window.ReactNativeWebView) return;
+            // if (!window.ReactNativeWebView) return;
 
             try {
                 window.addEventListener('message', function(event) {
